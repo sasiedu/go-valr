@@ -136,8 +136,13 @@ func (c *client) do(method, path string, data []byte, authNeeded bool) (response
 	req.Header.Add("Content-Type", "application/json;charset=utf-8")
 
 	if authNeeded {
+		signaturePath := fmt.Sprintf("/%s/%s", c.apiVersion, strings.Trim(path, "/"))
 		currentTime := time.Now()
-		signature, timestamp := signRequest(c.apiSecret, method, path, string(data), currentTime)
+		signature, timestamp := signRequest(c.apiSecret,
+			method,
+			signaturePath,
+			string(data),
+			currentTime)
 
 		req.Header.Add("X-VALR-API-KEY", c.apiKey)
 		req.Header.Add("X-VALR-SIGNATURE", signature)
@@ -156,7 +161,7 @@ func (c *client) do(method, path string, data []byte, authNeeded bool) (response
 	}
 
 	if resp.StatusCode != 200 && resp.StatusCode != 201 && resp.StatusCode != 202 && resp.StatusCode != 203 {
-		err = errors.New(resp.Status)
+		err = errors.New(resp.Status + ": " + string(response))
 	}
 	return response, err
 }

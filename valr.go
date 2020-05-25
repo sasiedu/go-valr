@@ -15,6 +15,13 @@ type Valr struct {
 	client *client
 }
 
+type OrderSide string
+
+const (
+	SELL OrderSide = "sell"
+	BUY            = "buy"
+)
+
 // New returns an instantiated Valr struct
 func New(apiKey, apiSecret string) *Valr {
 	client := NewClient(apiKey, apiSecret)
@@ -36,4 +43,15 @@ func NewWithCustomTimeout(apiKey, apiSecret string, timeout time.Duration) *Valr
 // set enable/disable http request/response dump
 func (v *Valr) SetDebug(enable bool) {
 	v.client.debug = enable
+}
+
+func (v *Valr) SetHttpBase(base string) {
+	v.client.setHttpBase(base)
+}
+
+func (v *Valr) SetWsBase(base string) {
+	v.client.setWsBase(base)
+}
+func (v *Valr) SetApiVersion(version string) {
+	v.client.setApiVersion(version)
 }

@@ -23,19 +23,6 @@ func (v *Valr) GetCurrencies() (currencies []Currency, err error) {
 	return
 }
 
-type OrderBookOrder struct {
-	Side         string
-	Quantity     decimal.Decimal
-	Price        decimal.Decimal
-	CurrencyPair string
-	OrderCount   uint32
-}
-
-type OrderBook struct {
-	Asks []OrderBookOrder
-	Bids []OrderBookOrder
-}
-
 func (v *Valr) GetPublicOrderBook(currencyPair string) (orderBook *OrderBook, err error) {
 	path := fmt.Sprintf("/public/%s/orderbook", strings.ToUpper(currencyPair))
 	resp, err := v.client.do("GET", path, []byte(""), false)

@@ -3,7 +3,6 @@ package valr
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/shopspring/decimal"
 	"time"
 )
 
@@ -26,9 +25,9 @@ func (v *Valr) GetDepositAddress(currencyCode string) (address *DepositAddress, 
 
 type CurrencyInfo struct {
 	Currency                string
-	MinimumWithdrawAmount   decimal.Decimal
+	MinimumWithdrawAmount   float64
 	IsActive                bool
-	WithdrawCost            decimal.Decimal
+	WithdrawCost            float64
 	SupportPaymentReference bool
 }
 
@@ -43,16 +42,16 @@ func (v *Valr) GetCurrencyWithdrawalInfo(currencyCode string) (info *CurrencyInf
 }
 
 type newWithdrawal struct {
-	Amount           decimal.Decimal `json:"amount"`
-	Address          string          `json:"address"`
-	PaymentReference string          `json:"paymentReference"`
+	Amount           float64 `json:"amount"`
+	Address          string  `json:"address"`
+	PaymentReference string  `json:"paymentReference"`
 }
 
 type WithdrawalID struct {
 	ID string
 }
 
-func (v *Valr) NewCryptoWithdrawal(currency, address string, amount decimal.Decimal, paymentReference string) (id *WithdrawalID, err error) {
+func (v *Valr) NewCryptoWithdrawal(currency, address string, amount float64, paymentReference string) (id *WithdrawalID, err error) {
 	path := fmt.Sprintf("/wallet/crypto/%s/withdraw", currency)
 	withdraw := newWithdrawal{amount, address, paymentReference}
 
@@ -72,8 +71,8 @@ func (v *Valr) NewCryptoWithdrawal(currency, address string, amount decimal.Deci
 type WithdrawalStatus struct {
 	Currency           string
 	Address            string
-	Amount             decimal.Decimal
-	FeeAmount          decimal.Decimal
+	Amount             float64
+	FeeAmount          float64
 	TransactionHash    string
 	Confirmations      uint8
 	LastConfirmationAt string
@@ -97,7 +96,7 @@ type Deposit struct {
 	CurrencyCode    string
 	ReceiveAddress  string
 	TransactionHash string
-	Amount          decimal.Decimal
+	Amount          float64
 	CreatedAt       time.Time
 	Confirmations   uint8
 	Confirmed       bool
@@ -117,8 +116,8 @@ func (v *Valr) GetCryptoDepositHistory(currency string, skip, limit uint32) (his
 type Withdrawal struct {
 	Currency           string
 	Address            string
-	Amount             decimal.Decimal
-	FeeAmount          decimal.Decimal
+	Amount             float64
+	FeeAmount          float64
 	TransactionHash    string
 	Confirmations      uint8
 	LastConfirmationAt string
@@ -159,12 +158,12 @@ func (v *Valr) GetBankAccounts() (banks []BankAccount, err error) {
 }
 
 type fiatWithdraw struct {
-	LinkedBankAccountId string          `json:"linkedBankAccountId"`
-	Amount              decimal.Decimal `json:"amount"`
-	Fast                bool            `json:"fast"`
+	LinkedBankAccountId string  `json:"linkedBankAccountId"`
+	Amount              float64 `json:"amount"`
+	Fast                bool    `json:"fast"`
 }
 
-func (v *Valr) NewFiatWithdrawal(bankAccountId string, amount decimal.Decimal, fastWithdraw bool) (id *WithdrawalID, err error) {
+func (v *Valr) NewFiatWithdrawal(bankAccountId string, amount float64, fastWithdraw bool) (id *WithdrawalID, err error) {
 	path := "/wallet/fiat/ZAR/withdraw"
 	withdraw := fiatWithdraw{bankAccountId, amount, fastWithdraw}
 

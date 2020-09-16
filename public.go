@@ -3,7 +3,6 @@ package valr
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/shopspring/decimal"
 	"strings"
 )
 
@@ -39,10 +38,10 @@ type CurrencyPair struct {
 	QuoteCurrency  string
 	ShortName      string
 	Active         bool
-	MinBaseAmount  decimal.Decimal
-	MaxBaseAmount  decimal.Decimal
-	MinQuoteAmount decimal.Decimal
-	MaxQuoteAmount decimal.Decimal
+	MinBaseAmount  float64 `json:",string"`
+	MaxBaseAmount  float64 `json:",string"`
+	MinQuoteAmount float64 `json:",string"`
+	MaxQuoteAmount float64 `json:",string"`
 }
 
 func (v *Valr) GetCurrencyPairs() (currencyPairs []CurrencyPair, err error) {
@@ -80,15 +79,15 @@ func (v *Valr) GetOrderTypesForCurrencyPair(currencyPair string) (orderTypes []s
 
 type MarketSummary struct {
 	CurrencyPair       string
-	AskPrice           decimal.Decimal
-	BidPrice           decimal.Decimal
-	LastTradedPrice    decimal.Decimal
-	PreviousClosePrice decimal.Decimal
-	BaseVolume         decimal.Decimal
-	HighPrice          decimal.Decimal
-	LowPrice           decimal.Decimal
+	AskPrice           float64 `json:",string"`
+	BidPrice           float64 `json:",string"`
+	LastTradedPrice    float64 `json:",string"`
+	PreviousClosePrice float64 `json:",string"`
+	BaseVolume         float64 `json:",string"`
+	HighPrice          float64 `json:",string"`
+	LowPrice           float64 `json:",string"`
 	Created            string
-	ChangeFromPrevious decimal.Decimal
+	ChangeFromPrevious float64 `json:",string"`
 }
 
 func (v *Valr) GetAllCurrencyPairMarketSummary() (marketSummaries []MarketSummary, err error) {

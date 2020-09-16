@@ -3,13 +3,12 @@ package valr
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/shopspring/decimal"
 )
 
 type Order struct {
 	Side            OrderSide
-	Quantity        decimal.Decimal
-	Price           decimal.Decimal
+	Quantity        float64 `json:",string"`
+	Price           float64 `json:",string"`
 	CurrencyPair    string
 	ID              string
 	PositionAtPrice uint8
@@ -42,8 +41,8 @@ func (v *Valr) GetNonAggregatedOrderBook(currencyPair string) (orderBook *OrderB
 }
 
 type Trade struct {
-	Price        decimal.Decimal
-	Quantity     decimal.Decimal
+	Price        float64 `json:",string"`
+	Quantity     float64 `json:",string"`
 	CurrencyPair string
 	TradeAt      string
 	TakerSide    OrderSide

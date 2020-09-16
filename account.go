@@ -3,15 +3,14 @@ package valr
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/shopspring/decimal"
 	"time"
 )
 
 type Balance struct {
 	Currency  string
-	Available decimal.Decimal
-	Reserved  decimal.Decimal
-	Total     decimal.Decimal
+	Available float64 `json:",string"`
+	Reserved  float64 `json:",string"`
+	Total     float64 `json:",string"`
 }
 
 func (v *Valr) GetBalance() (balances []Balance, err error) {
@@ -31,14 +30,14 @@ type TransactionType struct {
 type Transaction struct {
 	TransactionType TransactionType
 	DebitCurrency   string
-	DebitValue      decimal.Decimal
+	DebitValue      float64 `json:",string"`
 	CreditCurrency  string
-	CreditValue     decimal.Decimal
+	CreditValue     float64 `json:",string"`
 	FeeCurrency     string
-	FeeValue        decimal.Decimal
+	FeeValue        float64 `json:",string"`
 	EventAt         time.Time
 	AdditionalInfo  struct {
-		CostPerCoin        decimal.Decimal
+		CostPerCoin        float64
 		CostPerCoinSymbol  string
 		CurrencyPairSymbol string
 		OrderId            string

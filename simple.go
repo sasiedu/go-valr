@@ -3,26 +3,25 @@ package valr
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/shopspring/decimal"
 )
 
 type simpleBuySell struct {
-	PayInCurrency string          `json:"payInCurrency"`
-	PayAmount     decimal.Decimal `json:"payAmount"`
-	Side          OrderSide       `json:"side"`
+	PayInCurrency string    `json:"payInCurrency"`
+	PayAmount     float64   `json:"payAmount"`
+	Side          OrderSide `json:"side"`
 }
 
 type Quote struct {
 	CurrencyPair  string
-	PayAmount     decimal.Decimal
-	ReceiveAmount decimal.Decimal
-	Fee           decimal.Decimal
+	PayAmount     float64 `json:",string"`
+	ReceiveAmount float64 `json:",string"`
+	Fee           float64 `json:",string"`
 	FeeCurrency   string
 	Created       string
 	ID            string
 }
 
-func (v *Valr) SimpleBuyQuote(currencyPair, payInCurrency string, amount decimal.Decimal) (quote *Quote, err error) {
+func (v *Valr) SimpleBuyQuote(currencyPair, payInCurrency string, amount float64) (quote *Quote, err error) {
 	path := fmt.Sprintf("/simple/%s/quote", currencyPair)
 	buy := simpleBuySell{payInCurrency, amount, BUY}
 
@@ -39,7 +38,7 @@ func (v *Valr) SimpleBuyQuote(currencyPair, payInCurrency string, amount decimal
 	return
 }
 
-func (v *Valr) SimpleSellQuote(currencyPair, payInCurrency string, amount decimal.Decimal) (quote *Quote, err error) {
+func (v *Valr) SimpleSellQuote(currencyPair, payInCurrency string, amount float64) (quote *Quote, err error) {
 	path := fmt.Sprintf("/simple/%s/quote", currencyPair)
 	buy := simpleBuySell{payInCurrency, amount, SELL}
 
@@ -60,7 +59,7 @@ type OrderID struct {
 	ID string
 }
 
-func (v *Valr) SimpleBuyOrder(currencyPair, payInCurrency string, amount decimal.Decimal) (id *OrderID, err error) {
+func (v *Valr) SimpleBuyOrder(currencyPair, payInCurrency string, amount float64) (id *OrderID, err error) {
 	path := fmt.Sprintf("/simple/%s/order", currencyPair)
 	buy := simpleBuySell{payInCurrency, amount, BUY}
 
@@ -77,7 +76,7 @@ func (v *Valr) SimpleBuyOrder(currencyPair, payInCurrency string, amount decimal
 	return
 }
 
-func (v *Valr) SimpleSellOrder(currencyPair, payInCurrency string, amount decimal.Decimal) (id *OrderID, err error) {
+func (v *Valr) SimpleSellOrder(currencyPair, payInCurrency string, amount float64) (id *OrderID, err error) {
 	path := fmt.Sprintf("/simple/%s/order", currencyPair)
 	buy := simpleBuySell{payInCurrency, amount, SELL}
 

@@ -2,7 +2,6 @@ package valr
 
 import (
 	"github.com/joho/godotenv"
-	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
 	"log"
 	"os"
@@ -102,7 +101,7 @@ func TestValrHttpAccountApi(t *testing.T) {
 	assert.GreaterOrEqual(t, len(transactionHistory2), 1)
 
 	transactionHistory3, err := valr.GetTransactionHistoryFiltered(
-		&TransactionFilter{"", "", "LIMIT_BUY", "BTC", "", ""},
+		&TransactionFilter{"", "", "BLOCKCHAIN_SEND", "BTC", "", ""},
 	)
 	assert.Nil(t, err)
 	assert.GreaterOrEqual(t, len(transactionHistory3), 1)
@@ -116,7 +115,7 @@ func TestValrHttpAccountApi(t *testing.T) {
 
 	transactionHistoryCurrencyPair, err := valr.GetTransactionHistoryForCurrencyPair("BTCZAR", 2)
 	assert.Nil(t, err)
-	assert.Equal(t, 2, len(transactionHistoryCurrencyPair))
+	assert.Equal(t, 1, len(transactionHistoryCurrencyPair))
 }
 
 func TestValrHttpWalletApi(t *testing.T) {
@@ -173,7 +172,7 @@ func TestValrHttpWalletApi(t *testing.T) {
 	assert.Nil(t, err)
 	assert.GreaterOrEqual(t, len(accounts), 1)
 
-	fiatWithdraw, err := valr.NewFiatWithdrawal(accounts[0].ID, decimal.NewFromInt(1), false)
+	fiatWithdraw, err := valr.NewFiatWithdrawal(accounts[0].ID, 1.0, false)
 	assert.Nil(t, err)
 	assert.NotNil(t, fiatWithdraw)
 	assert.NotEqual(t, "", fiatWithdraw.ID)
@@ -215,7 +214,7 @@ func TestValrHttpMarketApi(t *testing.T) {
 	assert.Nil(t, err)
 	assert.GreaterOrEqual(t, len(tradeHistory), 1)
 	assert.Equal(t, "BTCZAR", tradeHistory[0].CurrencyPair)
-	assert.Equal(t, false, tradeHistory[0].Price.IsZero())
+	assert.NotEqual(t, 0.0, tradeHistory[0].Price)
 }
 
 func TestValrHttpSimpleApi(t *testing.T) {
@@ -232,22 +231,22 @@ func TestValrHttpSimpleApi(t *testing.T) {
 		valr.SetHttpBase(httpBase)
 	}
 
-	buyQuote, err := valr.SimpleBuyQuote("BTCZAR", "ZAR", decimal.NewFromInt32(10))
+	buyQuote, err := valr.SimpleBuyQuote("BTCZAR", "ZAR", 10)
 	assert.Nil(t, err)
 	assert.NotNil(t, buyQuote)
 	assert.Equal(t, "BTCZAR", buyQuote.CurrencyPair)
 
-	sellQuote, err := valr.SimpleSellQuote("BTCZAR", "BTC", decimal.NewFromFloat(0.0001))
+	sellQuote, err := valr.SimpleSellQuote("BTCZAR", "BTC", 0.0001)
 	assert.Nil(t, err)
 	assert.NotNil(t, sellQuote)
 	assert.Equal(t, "BTCZAR", sellQuote.CurrencyPair)
 
-	buyOrder, err := valr.SimpleBuyOrder("XRPZAR", "ZAR", decimal.NewFromInt32(10))
+	buyOrder, err := valr.SimpleBuyOrder("XRPZAR", "ZAR", 10)
 	assert.Nil(t, err)
 	assert.NotNil(t, buyOrder)
 	assert.NotEqual(t, "", buyOrder.ID)
 
-	sellOrder, err := valr.SimpleSellOrder("XRPZAR", "XRP", decimal.NewFromFloat(3))
+	sellOrder, err := valr.SimpleSellOrder("XRPZAR", "XRP", 3)
 	assert.Nil(t, err)
 	assert.NotNil(t, sellOrder)
 	assert.NotEmpty(t, sellOrder.ID)

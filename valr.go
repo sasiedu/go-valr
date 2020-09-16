@@ -1,6 +1,8 @@
 package valr
 
 import (
+	"bytes"
+	"encoding/json"
 	"net/http"
 	"time"
 )
@@ -54,4 +56,13 @@ func (v *Valr) SetWsBase(base string) {
 }
 func (v *Valr) SetApiVersion(version string) {
 	v.client.setApiVersion(version)
+}
+
+func structToBytes(val interface{}) ([]byte, error) {
+	bytesBuffer := new(bytes.Buffer)
+	if err := json.NewEncoder(bytesBuffer).Encode(val); err != nil {
+		return nil, err
+	}
+
+	return bytesBuffer.Bytes(), nil
 }

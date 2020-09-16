@@ -1,7 +1,6 @@
 package valr
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/shopspring/decimal"
@@ -47,15 +46,6 @@ type newWithdrawal struct {
 	Amount           decimal.Decimal `json:"amount"`
 	Address          string          `json:"address"`
 	PaymentReference string          `json:"paymentReference"`
-}
-
-func structToBytes(val interface{}) ([]byte, error) {
-	bytesBuffer := new(bytes.Buffer)
-	if err := json.NewEncoder(bytesBuffer).Encode(val); err != nil {
-		return nil, err
-	}
-
-	return bytesBuffer.Bytes(), nil
 }
 
 type WithdrawalID struct {

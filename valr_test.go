@@ -145,7 +145,7 @@ func TestValrHttpWalletApi(t *testing.T) {
 	assert.Equal(t, true, withdrawalInfo.IsActive)
 	assert.Equal(t, false, withdrawalInfo.SupportPaymentReference)
 
-	/*withdrawID, err := valr.NewCryptoWithdrawal("XRP", depositAddress.Address, withdrawalInfo.MinimumWithdrawAmount, depositAddress.PaymentReference)
+	withdrawID, err := valr.NewCryptoWithdrawal("XRP", depositAddress.Address, withdrawalInfo.MinimumWithdrawAmount, depositAddress.PaymentReference)
 	assert.Nil(t, err)
 	assert.NotNil(t, withdrawID)
 	assert.NotEqual(t, "", withdrawID.ID)
@@ -155,7 +155,7 @@ func TestValrHttpWalletApi(t *testing.T) {
 	assert.NotNil(t, status)
 	assert.Equal(t, "XRP", status.Currency)
 	assert.Equal(t, depositAddress.Address, status.Address)
-	assert.Equal(t, withdrawalInfo.MinimumWithdrawAmount, status.Amount)*/
+	assert.Equal(t, withdrawalInfo.MinimumWithdrawAmount, status.Amount)
 
 	depositHistory, err := valr.GetCryptoDepositHistory("BTC", 0, 2)
 	assert.Nil(t, err)
@@ -216,4 +216,39 @@ func TestValrHttpMarketApi(t *testing.T) {
 	assert.GreaterOrEqual(t, len(tradeHistory), 1)
 	assert.Equal(t, "BTCZAR", tradeHistory[0].CurrencyPair)
 	assert.Equal(t, false, tradeHistory[0].Price.IsZero())
+}
+
+func TestValrHttpSimpleApi(t *testing.T) {
+	if err := godotenv.Load(); err != nil {
+		log.Fatal(err)
+	}
+
+	apiKey := os.Getenv("VALR_API_KEY")
+	apiSecret := os.Getenv("VALR_API_SECRET")
+	httpBase := os.Getenv("HTTP_BASE")
+
+	valr := New(apiKey, apiSecret)
+	if httpBase != "" {
+		valr.SetHttpBase(httpBase)
+	}
+
+	buyQuote, err := valr.SimpleBuyQuote("BTCZAR", "ZAR", decimal.NewFromInt32(10))
+	assert.Nil(t, err)
+	assert.NotNil(t, buyQuote)
+	assert.Equal(t, "BTCZAR", buyQuote.CurrencyPair)
+
+	sellQuote, err := valr.SimpleSellQuote("BTCZAR", "BTC", decimal.NewFromFloat(0.0001))
+	assert.Nil(t, err)
+	assert.NotNil(t, sellQuote)
+	assert.Equal(t, "BTCZAR", sellQuote.CurrencyPair)
+
+	buyOrder, err := valr.SimpleBuyOrder("XRPZAR", "ZAR", decimal.NewFromInt32(10))
+	assert.Nil(t, err)
+	assert.NotNil(t, buyOrder)
+	assert.NotEqual(t, "", buyOrder.ID)
+
+	sellOrder, err := valr.SimpleSellOrder("XRPZAR", "XRP", decimal.NewFromFloat(3))
+	assert.Nil(t, err)
+	assert.NotNil(t, sellOrder)
+	assert.NotEmpty(t, sellOrder.ID)
 }

@@ -251,3 +251,45 @@ func TestValrHttpSimpleApi(t *testing.T) {
 	assert.NotNil(t, sellOrder)
 	assert.NotEmpty(t, sellOrder.ID)
 }
+
+func TestValrHttpExchangeApi(t *testing.T) {
+	if err := godotenv.Load(); err != nil {
+		log.Fatal(err)
+	}
+
+	apiKey := os.Getenv("VALR_API_KEY")
+	apiSecret := os.Getenv("VALR_API_SECRET")
+	httpBase := os.Getenv("HTTP_BASE")
+
+	valr := New(apiKey, apiSecret)
+	if httpBase != "" {
+		valr.SetHttpBase(httpBase)
+	}
+
+	id, err := valr.PlaceLimitOrder(LimitOrder{
+		Side:            "BUY",
+		Quantity:        10,
+		Price:           130120,
+		Pair:            "BTCZAR",
+		PostOnly:        false,
+		CustomerOrderID: "",
+	})
+	assert.Nil(t, err)
+	assert.NotNil(t, id)
+	assert.NotEmpty(t, id.ID)
+
+	id2, err := valr.PlaceMarketOrder(MarketOrder{
+		Side:            "SELL",
+		BaseAmount:      0.0001,
+		Pair:            "BTCZAR",
+		CustomerOrderID: "",
+	})
+	assert.Nil(t, err)
+	assert.NotNil(t, id2)
+	assert.NotEmpty(t, id2.ID)
+
+	status, err := valr.GetOrderStatus("BTCZAR", id.ID)
+	assert.Nil(t, err)
+	assert.NotNil(t, status)
+	assert.Equal(t, id.ID, status.OrderID)
+}

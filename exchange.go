@@ -9,6 +9,7 @@ type LimitOrder struct {
 	Side            OrderSide `json:"side"`
 	Quantity        float64   `json:"quantity"`
 	Price           float64   `json:"price"`
+	Pair            string    `json:"pair"`
 	PostOnly        bool      `json:"postOnly"`
 	CustomerOrderID string    `json:"customerOrderId"`
 }
@@ -25,10 +26,10 @@ type OrderStatus struct {
 	OrderID           string
 	OrderStatusType   string
 	CurrencyPair      string
-	OriginalPrice     float64
-	RemainingQuantity float64
-	OriginalQuantity  float64
-	FilledPercentage  float64
+	OriginalPrice     float64 `json:",string"`
+	RemainingQuantity float64 `json:",string"`
+	OriginalQuantity  float64 `json:",string"`
+	FilledPercentage  float64 `json:",string"`
 	OrderSide         OrderSide
 	OrderType         string
 	FailedReason      string
@@ -37,7 +38,7 @@ type OrderStatus struct {
 	OrderCreatedAt    string
 }
 
-func (v *Valr) LimitOrder(order LimitOrder) (id *OrderID, err error) {
+func (v *Valr) PlaceLimitOrder(order LimitOrder) (id *OrderID, err error) {
 	path := "/orders/limit"
 
 	body, err := structToBytes(order)
@@ -53,7 +54,7 @@ func (v *Valr) LimitOrder(order LimitOrder) (id *OrderID, err error) {
 	return
 }
 
-func (v *Valr) MarketOrder(order MarketOrder) (id *OrderID, err error) {
+func (v *Valr) PlaceMarketOrder(order MarketOrder) (id *OrderID, err error) {
 	path := "/orders/market"
 
 	body, err := structToBytes(order)

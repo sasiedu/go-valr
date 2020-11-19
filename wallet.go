@@ -25,9 +25,10 @@ func (v *Valr) GetDepositAddress(currencyCode string) (address *DepositAddress, 
 
 type CurrencyInfo struct {
 	Currency                string
-	MinimumWithdrawAmount   float64
+	MinimumWithdrawAmount   float64 `json:",string"`
+	WithdrawalDecimalPlaces float64 `json:",string"`
 	IsActive                bool
-	WithdrawCost            float64
+	WithdrawCost            float64 `json:",string"`
 	SupportPaymentReference bool
 }
 
@@ -71,8 +72,8 @@ func (v *Valr) NewCryptoWithdrawal(currency, address string, amount float64, pay
 type WithdrawalStatus struct {
 	Currency           string
 	Address            string
-	Amount             float64
-	FeeAmount          float64
+	Amount             float64 `json:",string"`
+	FeeAmount          float64 `json:",string"`
 	TransactionHash    string
 	Confirmations      uint8
 	LastConfirmationAt string
@@ -96,7 +97,7 @@ type Deposit struct {
 	CurrencyCode    string
 	ReceiveAddress  string
 	TransactionHash string
-	Amount          float64
+	Amount          float64 `json:",string"`
 	CreatedAt       time.Time
 	Confirmations   uint8
 	Confirmed       bool
@@ -116,8 +117,8 @@ func (v *Valr) GetCryptoDepositHistory(currency string, skip, limit uint32) (his
 type Withdrawal struct {
 	Currency           string
 	Address            string
-	Amount             float64
-	FeeAmount          float64
+	Amount             float64 `json:",string"`
+	FeeAmount          float64 `json:",string"`
 	TransactionHash    string
 	Confirmations      uint8
 	LastConfirmationAt string

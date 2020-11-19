@@ -113,7 +113,7 @@ func TestValrHttpAccountApi(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, 2, len(transactionHistoryLimitById))
 
-	transactionHistoryCurrencyPair, err := valr.GetTransactionHistoryForCurrencyPair("BTCZAR", 2)
+	transactionHistoryCurrencyPair, err := valr.GetTransactionHistoryForCurrencyPair("BTCZAR", 1)
 	assert.Nil(t, err)
 	assert.Equal(t, 1, len(transactionHistoryCurrencyPair))
 }
